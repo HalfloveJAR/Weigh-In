@@ -8,6 +8,7 @@ public class CalorieInputPage extends JFrame {
     private JFrame frame;
     private JTextField inputField;
     private JLabel valueLabel;
+    private int totalCalories = 0;
 
     public CalorieInputPage() {
         // Setup main frame
@@ -21,7 +22,7 @@ public class CalorieInputPage extends JFrame {
         JPanel valuePanel = new JPanel();
         valuePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        valueLabel = new JLabel("Value: 0", SwingConstants.CENTER);
+        valueLabel = new JLabel("Total Calories: 0", SwingConstants.CENTER);
         valueLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         frame.add(valueLabel, BorderLayout.NORTH);
 
@@ -43,7 +44,12 @@ public class CalorieInputPage extends JFrame {
     private void handleSubmit() {
         String input = inputField.getText().trim();
         if (input.matches("\\d+")) {
-            valueLabel.setText("Value: " + input);
+            try {
+                totalCalories += Integer.parseInt(input);
+                valueLabel.setText("Total Calories: " + totalCalories);
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         } else {
             JOptionPane.showMessageDialog(frame, "Please enter a valid number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
         }
