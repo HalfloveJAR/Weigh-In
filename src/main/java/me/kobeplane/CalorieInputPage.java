@@ -2,9 +2,8 @@ package me.kobeplane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
 import java.nio.file.*;
-import java.time.LocalDate;
+import java.util.Date;
 
 public class CalorieInputPage {
 
@@ -13,8 +12,6 @@ public class CalorieInputPage {
     private JLabel valueLabel;
 
     private int calorieValue = 0;
-    private final Path dateFile = Paths.get("lastDate.txt");
-    private final Path calorieFile = Paths.get("calories.txt");
 
     public CalorieInputPage() {
         checkAndResetIfNewDay(); // <- Handles date-based reset
@@ -36,7 +33,6 @@ public class CalorieInputPage {
         submitButton.addActionListener(e -> handleSubmit());
 
         JButton testDayReset = new JButton("Test New Day");
-        testDayReset.addActionListener(e -> checkAndResetIfNewDay());
 
         JButton goToShopPage = new JButton("Shop Page");
         goToShopPage.addActionListener(e -> {goToShopPage();});
@@ -62,41 +58,25 @@ public class CalorieInputPage {
     }
 
     private void checkAndResetIfNewDay() {
-        LocalDate today = LocalDate.now();
-
-        try {
-            if (Files.exists(dateFile)) {
-                String lastDate = Files.readString(dateFile).trim();
-                if (!lastDate.equals(today.toString())) {
-                    // New day, reset calorie value and update date file
-                    calorieValue = 0;
-                    saveCalorieValue();
-                    Files.writeString(dateFile, today.toString());
-                }
-            } else {
-                // First run
-                Files.writeString(dateFile, today.toString());
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Failed to check/reset day.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        //Will need to check the current date and the latest date in the database, if they do not match, then the GUI should show that
     }
 
     private void loadCalorieValue() {
         try {
-            if (Files.exists(calorieFile)) {
-                String calorieStr = Files.readString(calorieFile).trim();
-                calorieValue = Integer.parseInt(calorieStr);
+            if (!Main.calorieLogService.dateExists(new Date())) {
+                calorieValue = 0;
             }
-        } catch (IOException | NumberFormatException e) {
+            calorieValue = Main.calorieLogService.getCaloriesForDate(new Date());
+        } catch (Exception e) {
             calorieValue = 0;
+            e.printStackTrace();
         }
     }
 
     private void saveCalorieValue() {
         try {
-            Files.writeString(calorieFile, String.valueOf(calorieValue));
-        } catch (IOException e) {
+            Main.calorieLogService.addCaloriesToToday(calorieValue);
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Failed to save calorie value.", "File Error", JOptionPane.ERROR_MESSAGE);
         }
     }
