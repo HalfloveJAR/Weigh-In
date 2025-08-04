@@ -65,6 +65,7 @@ public class CalorieInputPage {
         try {
             if (!Main.calorieLogService.dateExists(new Date())) {
                 calorieValue = 0;
+                return;
             }
             calorieValue = Main.calorieLogService.getCaloriesForDate(new Date());
         } catch (Exception e) {
