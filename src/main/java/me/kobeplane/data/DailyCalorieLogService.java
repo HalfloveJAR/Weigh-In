@@ -102,4 +102,38 @@ public class DailyCalorieLogService {
         return cal.getTime();
     }
 
+    public int getPreviousCalories() {
+        try {
+            // Step 1: Get today's log entry
+            Date today = normalizeDate(new Date());
+            QueryBuilder<DailyCalorieLogData, String> todayQuery = calorieLogDao.queryBuilder();
+            todayQuery.where().eq("logDate", today);
+            List<DailyCalorieLogData> todayResults = calorieLogDao.query(todayQuery.prepare());
+
+            if (todayResults.isEmpty()) {
+                // No entry for today; assume 0
+                return 0;
+            }
+
+            int todayDayId = todayResults.get(0).getDayId();
+
+            // Step 2: Look for the previous day by dayId - 1
+            int previousDayId = todayDayId - 1;
+            QueryBuilder<DailyCalorieLogData, String> prevQuery = calorieLogDao.queryBuilder();
+            prevQuery.where().eq("dayId", previousDayId);
+            List<DailyCalorieLogData> prevResults = calorieLogDao.query(prevQuery.prepare());
+
+            if (!prevResults.isEmpty()) {
+                return prevResults.get(0).getTotalCalories();
+            }
+
+            // Step 3: No previous day found; this must be the first date
+            return 0;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return 0;
+        }
+    }
+
 }

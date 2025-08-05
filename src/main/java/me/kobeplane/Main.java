@@ -19,7 +19,7 @@ public class Main {
         try {
             String connectionUrl;
             ConnectionSource connectionSource;
-            connectionUrl = "jdbc:sqlite:" + System.getProperty("user.dir") + "/planpal.db";
+            connectionUrl = "jdbc:sqlite:" + System.getProperty("user.dir") + "/weighin.db";
             connectionSource = new JdbcConnectionSource(connectionUrl);
             calorieLogService = new DailyCalorieLogService(connectionSource);
         } catch (Exception ex) {

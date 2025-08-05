@@ -9,7 +9,7 @@
     <version>1.0</version>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.9.22</kotlin.version>
     </properties>
@@ -34,8 +34,13 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>me.kobeplane.Main</mainClass>
+                                </transformer>
+                            </transformers>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputFile>B:\B:\Weigh In\WeighIn-${project.version}.jar</outputFile>
+                            <outputFile>C:\Users\kplan\OneDrive\Desktop\School\IT499\WeighIn Unit 9 Assignment\WeighIn-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>

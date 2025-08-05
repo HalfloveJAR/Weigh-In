@@ -59,7 +59,7 @@ public class ShopPage {
 
         JButton buyButton = new JButton("Buy");
         buyButton.setBorder(new LineBorder(Color.BLACK, 1));
-        buyButton.addActionListener(e -> openCheckoutPage(name));
+        buyButton.addActionListener(e -> openCheckoutPage());
 
         panel.add(nameLabel, BorderLayout.NORTH);
         panel.add(buyButton, BorderLayout.CENTER);
@@ -67,8 +67,9 @@ public class ShopPage {
         return panel;
     }
 
-    private void openCheckoutPage(String itemName) {
-        JOptionPane.showMessageDialog(frame, "Opening checkout for: " + itemName);
+    private void openCheckoutPage() {
+        frame.dispose();
+        SwingUtilities.invokeLater(CheckoutPage::new);
     }
 
     private void openWebstoreLink(ActionEvent e) {
